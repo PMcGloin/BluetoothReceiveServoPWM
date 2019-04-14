@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/default/production\BluetoothReceiveServoPWM.X.production.hex">
+    <memory name="program">
+      <units>bytes</units>
+      <length>32768</length>
+      <used>6122</used>
+      <free>26646</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>1536</length>
+      <used>97</used>
+      <free>1439</free>
+    </memory>
+  </executable>
+</project>

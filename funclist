@@ -1,0 +1,7 @@
+___aldiv: CODE, 1665 0 143
+_UART_Read: CODE, 1611 0 6
+_UART_Data_Ready: CODE, 1605 0 6
+_UART_Init: CODE, 1808 0 236
+_main: CODE, 1617 0 48
+__initialization: CODE, 2044 0 0
+Total: 439
