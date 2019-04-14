@@ -65,13 +65,12 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 #include <xc.h>
-#define ServoShoulderRoationPWM PORTBbits.RB0
+#define ServoShoulderRoationPWM PORTBbits.RB6
 #define ServoShoulderAnglePWM PORTBbits.RB1
 #define ServoElbowAnglePWM PORTBbits.RB2
 #define ServoWristAnglePWM PORTBbits.RB3
 #define ServoWristRotationPWM PORTBbits.RB4
 #define ServoGripperPWM PORTBbits.RB5
-
 /* 
     * The system clock is 8 MHz. If no prescaler is used, the timer will step
     * every 0.5 microseconds.
@@ -104,67 +103,52 @@ void main()
     double receivedAngle = 0;
     unsigned int delayCycles = 0, fianlDelayCycles = 0;
     for(i=0;i<6;i++){
-        Output[i] = 45;
+        Output[i] = 70;
     }
     while(1){
         if (RCIF == 1){ //receive interrupt flag
             UART_Read_Text(Output, 6);    //uart.h
-            /*
-            delayCycles = 40000 - fianlDelayCycles;
-            //RB6 = 1;
-            pulseDelay(delayCycles);
-            //RB6 = 1;
-            fianlDelayCycles = 0;
-            */
             receivedAngle = Output[0];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoShoulderRoationPWM = 1;
             pulseDelay(delayCycles);
             ServoShoulderRoationPWM = 0;
-            /*
             receivedAngle = Output[1];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoShoulderAnglePWM = 1;
             pulseDelay(delayCycles);
             ServoShoulderAnglePWM = 0;
-            
             receivedAngle = Output[2];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoElbowAnglePWM = 1;
             pulseDelay(delayCycles);
             ServoElbowAnglePWM = 0;
-            
             receivedAngle = Output[3];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoWristAnglePWM = 1;
             pulseDelay(delayCycles);
             ServoWristAnglePWM = 0;
-            
             receivedAngle = Output[4];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoWristRotationPWM = 1;
             pulseDelay(delayCycles);
             ServoWristRotationPWM = 0;
-            
             receivedAngle = Output[5];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoGripperPWM = 1;
             pulseDelay(delayCycles);
             ServoGripperPWM = 0;
-            */
-            //TEST CODE
-            delayCycles = 40000 - fianlDelayCycles;
-            PORTBbits.RB6 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB6 = 1;
+            fianlDelayCycles = (40000 - 16200) - fianlDelayCycles;
+            PORTBbits.RB0 = 1;
+            pulseDelay(fianlDelayCycles);
+            PORTBbits.RB0 = 0;
             fianlDelayCycles = 0;
-            
         }
         if (OERR == 1){ //overrun error
             CREN = 0;
@@ -178,47 +162,40 @@ void main()
             ServoShoulderRoationPWM = 1;
             pulseDelay(delayCycles);
             ServoShoulderRoationPWM = 0;
-            /*
             receivedAngle = Output[1];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoShoulderAnglePWM = 1;
             pulseDelay(delayCycles);
             ServoShoulderAnglePWM = 0;
-            
             receivedAngle = Output[2];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoElbowAnglePWM = 1;
             pulseDelay(delayCycles);
             ServoElbowAnglePWM = 0;
-            
             receivedAngle = Output[3];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoWristAnglePWM = 1;
             pulseDelay(delayCycles);
             ServoWristAnglePWM = 0;
-            
             receivedAngle = Output[4];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoWristRotationPWM = 1;
             pulseDelay(delayCycles);
             ServoWristRotationPWM = 0;
-            
             receivedAngle = Output[5];
             delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
             fianlDelayCycles = fianlDelayCycles + delayCycles;
             ServoGripperPWM = 1;
             pulseDelay(delayCycles);
             ServoGripperPWM = 0;
-            */
-            //TEST CODE
-            delayCycles = 40000 - fianlDelayCycles;
-            PORTBbits.RB6 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB6 = 1;
+            fianlDelayCycles = (40000 - 16200) - fianlDelayCycles;
+            PORTBbits.RB0 = 1;
+            pulseDelay(fianlDelayCycles);
+            PORTBbits.RB0 = 0;
             fianlDelayCycles = 0;
             }
         }
