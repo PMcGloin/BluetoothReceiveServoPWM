@@ -1,8 +1,10 @@
 #define _XTAL_FREQ 8000000    //18f4520
 #include <pic18f4520.h>
 #include "uart.h"
-#include <stdint.h>        /* For uint8_t definition */
-#include <stdbool.h>       /* For true/false definition */
+#include <stdint.h>         /* For uint8_t definition */
+#include <stdbool.h>        /* For true/false definition */
+#include <p18cxxx.h>        /* C18 General Include File */
+#include <htc.h>            /* HiTech General File */
 // PIC18F4520 Configuration Bit Settings
 // 'C' source line config statements
 // CONFIG1H
@@ -52,12 +54,6 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 #include <xc.h>
-#define ServoShoulderRoationPWM PORTBbits.RB0
-#define ServoShoulderAnglePWM PORTBbits.RB1
-#define ServoElbowAnglePWM PORTBbits.RB2
-#define ServoWristAnglePWM PORTBbits.RB3
-#define ServoWristRotationPWM PORTBbits.RB4
-#define ServoGripperPWM PORTBbits.RB5
 /* 
  * The system clock is 8 MHz. If no prescaler is used, the timer will step
  * every 0.5 microseconds.
@@ -66,134 +62,59 @@
  * 2^16-4000 = 61536 steps = 2ms, 180deg
  * 2^16-1000 = 64536 steps = 0.5ms, 0deg
 */
-void pulseDelay(unsigned int delay){
+void initialise(void){
+    /*clock speed setup*/
+    IRCF2 = 1;
+    IRCF1 = 1;
+    IRCF0 = 1;              //8MHz 18f4520
+    TRISB = 0x00;           //PORTB as Output
+    UARTInitialise(9600);   //uart.h
+    /*Timer0 Setup*/
+    T08BIT = 0;             // 16-bit mode
+    T0CS = 0;               // clock source internal osc
+    PSA = 1;                // no pre-scaler
+    /*Interrupts*/
+    RCIE = 1;               // EUSART receive interrupt enable
+    GIE = 1;                // enable global interrupts
+}
+void pulseDelay(unsigned int delaySteps){
     TMR0ON = 1;             //start timer0
-    TMR0 = 65536 - delay;
+    delaySteps = (unsigned int)(65535 - delaySteps);
+    TMR0H = (delaySteps & 0b1111111100000000)>>8;
+    TMR0L = (delaySteps & 0b0000000011111111);
     while (TMR0IF == 0) {}  // wait for the timer to overflow
     TMR0IF = 0;             // clear the overflow flag
     TMR0ON = 0;             //stop timer0
 }
-void main()
-{
-    /*clock speed setup*/
-    IRCF2 = 1;
-    IRCF1 = 1;
-    IRCF0 = 1;              //8MHz 4520 / 16MHz 45k20
-    TRISB = 0x00;           //PORTB as Output
-    UART_Init(9600);        //uart.h
-    /*Timer0 Setup*/
-    T08BIT = 0;             // 16-bit mode
-    T0CS = 0;               // clock source internal osc
-    PSA = 1;                // no prescaler
-    unsigned char Output[6] = {180,0,0,0,0,0}, i;
-    double receivedAngle = 0;
+void servoRun(char* Output){
     unsigned int delayCycles = 0, fianlDelayCycles = 0;
+    unsigned char servoNumber; //0-5
+    for(servoNumber = 0; servoNumber < 6; servoNumber++){
+        delayCycles = (unsigned int)(((Output[servoNumber]/180.0)*3900)+1000);
+        fianlDelayCycles += (delayCycles+(Output[servoNumber]*3));
+        PORTB = 1<<servoNumber;
+        pulseDelay(delayCycles);
+        PORTB = 0<<servoNumber;
+    }
+    fianlDelayCycles = (unsigned int)((40000-14500) - fianlDelayCycles);
+    pulseDelay(fianlDelayCycles);
+}
+void main(){
+    initialise();
+    /*
+    Step Delay: a milliseconds delay between the movement of each servo.  Allowed values from 10 to 30 msec.
+    M1=base degrees. Allowed values from 0 to 180 degrees
+    M2=shoulder degrees. Allowed values from 15 to 165 degrees
+    M3=elbow degrees. Allowed values from 0 to 180 degrees
+    M4=wrist vertical degrees. Allowed values from 0 to 180 degrees
+    M5=wrist rotation degrees. Allowed values from 0 to 180 degrees
+    M6=gripper degrees. Allowed values from 10 to 73 degrees. 10: the toungue is open, 73: the gripper is closed.
+    */
+    unsigned char Output[6] = {90,90,0,90,90,10}; //start position
     while(1){
+        servoRun(Output);
         if (RCIF == 1){ //receive interrupt flag
-            UART_Read_Text(Output, 6);    //uart.h
-            
-            receivedAngle = Output[0];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB0 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB0 = 0;
-            
-            receivedAngle = Output[1];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB1 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB1 = 0;
-            
-            receivedAngle = Output[2];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB2 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB2 = 0;
-            
-            receivedAngle = Output[3];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB3 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB3 = 0;
-            
-            receivedAngle = Output[4];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB4 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB4 = 0;
-            
-            receivedAngle = Output[5];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB5 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB5 = 0;
-            
-            fianlDelayCycles = (40000 - 16200) - fianlDelayCycles;  //40000 = 20ms minus machine cycles for calculations
-            PORTBbits.RB6 = 1;
-            pulseDelay(fianlDelayCycles);
-            PORTBbits.RB6 = 0;
-            fianlDelayCycles = 0;
-        }
-        if (OERR == 1){ //overrun error
-            CREN = 0;
-            CREN = 1;   //Reset CREN
-        }
-        else{
-            while(!RCIF){
-            receivedAngle = Output[0];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB0 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB0 = 0;
-            
-            receivedAngle = Output[1];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB1 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB1 = 0;
-            
-            receivedAngle = Output[2];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB2 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB2 = 0;
-            
-            receivedAngle = Output[3];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB3 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB3 = 0;
-            
-            receivedAngle = Output[4];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB4 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB4 = 0;
-            
-            receivedAngle = Output[5];
-            delayCycles = (unsigned int)(((receivedAngle/180.0)*3000)+1000);
-            fianlDelayCycles += delayCycles;
-            PORTBbits.RB5 = 1;
-            pulseDelay(delayCycles);
-            PORTBbits.RB5 = 0;
-            
-            fianlDelayCycles = (40000 - 16200) - fianlDelayCycles;  //40000 = 20ms minus machine cycles for calculations
-            PORTBbits.RB6 = 1;
-            pulseDelay(fianlDelayCycles);
-            PORTBbits.RB6 = 0;
-            fianlDelayCycles = 0;
-            }
+            UARTReadString(Output, 6);    //uart.h
         }
     }
 }
