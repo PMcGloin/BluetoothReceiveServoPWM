@@ -68,7 +68,19 @@ void initialise(void){
     IRCF1 = 1;
     IRCF0 = 1;              //8MHz 18f4520
     TRISB = 0x00;           //PORTB as Output
-    UARTInitialise(9600);   //uart.h
+    /*baud rate set up*/
+    //TXSTA
+    SYNC = 0;               //Async
+    BRGH = 1;               //high speed
+    //RCSTA
+    SPEN = 1;               //serial port enable
+    CREN = 1;               //continuous receive
+    //BAUDCON
+    TRISC7 = 1;             //portc bit 7 input
+    TRISC6 = 1;             //portc bit 6 input
+    BRG16 = 0;              //8 bit mode
+    WUE = 1;                //falling edge
+    SPBRG = 51;             //9600 baud rate
     /*Timer0 Setup*/
     T08BIT = 0;             // 16-bit mode
     T0CS = 0;               // clock source internal osc
