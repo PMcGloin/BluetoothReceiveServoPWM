@@ -15,6 +15,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _CREN `Vb ~T0 @X0 0 e@32092 ]
 "8722
 [v _TXEN `Vb ~T0 @X0 0 e@32101 ]
+"8176
+[v _RCIF `Vb ~T0 @X0 0 e@31989 ]
 "7888
 [v _OERR `Vb ~T0 @X0 0 e@32089 ]
 "3588
@@ -33,6 +35,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _T0CS `Vb ~T0 @X0 0 e@32429 ]
 "8014
 [v _PSA `Vb ~T0 @X0 0 e@32427 ]
+"8173
+[v _RCIE `Vb ~T0 @X0 0 e@31981 ]
 "7411
 [v _GIE `Vb ~T0 @X0 0 e@32663 ]
 "8503
@@ -46,8 +50,6 @@ Version 3.2 HI-TECH Software Intermediate Code
 "271
 [v _PORTB `Vuc ~T0 @X0 0 e@3969 ]
 [p mainexit ]
-"8176
-[v _RCIF `Vb ~T0 @X0 0 e@31989 ]
 [; ;pic18f4520.h: 52: extern volatile unsigned char PORTA __at(0xF80);
 "54 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f4520.h
 [; ;pic18f4520.h: 54: asm("PORTA equ 0F80h");
@@ -2888,9 +2890,16 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;uart.h: 20: char UARTReadChar(){
 [e :U _UARTReadChar ]
 [f ]
+[; ;uart.h: 21: while(!RCIF);
+"21
+[e $U 280  ]
+[e :U 281 ]
+[e :U 280 ]
+[e $ ! _RCIF 281  ]
+[e :U 282 ]
 [; ;uart.h: 22: if (OERR == 1){
 "22
-[e $ ! == -> _OERR `i -> 1 `i 280  ]
+[e $ ! == -> _OERR `i -> 1 `i 283  ]
 {
 [; ;uart.h: 23: CREN = 0;
 "23
@@ -2900,7 +2909,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e = _CREN -> -> 1 `i `b ]
 "25
 }
-[e :U 280 ]
+[e :U 283 ]
 [; ;uart.h: 25: }
 [; ;uart.h: 26: return RCREG;
 "26
@@ -2925,8 +2934,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 "30
 {
 [e = _i -> -> 0 `i `uc ]
-[e $U 285  ]
-[e :U 282 ]
+[e $U 288  ]
+[e :U 285 ]
 {
 [; ;uart.h: 31: Output[i] = UARTReadChar();
 "31
@@ -2935,15 +2944,15 @@ Version 3.2 HI-TECH Software Intermediate Code
 }
 "30
 [e ++ _i -> -> 1 `i `uc ]
-[e :U 285 ]
-[e $ < -> _i `i -> _length `i 282  ]
-[e :U 283 ]
+[e :U 288 ]
+[e $ < -> _i `i -> _length `i 285  ]
+[e :U 286 ]
 "32
 }
 [; ;uart.h: 32: }
 [; ;uart.h: 33: }
 "33
-[e :UE 281 ]
+[e :UE 284 ]
 }
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
@@ -3084,125 +3093,126 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;BluetoothReceiveServoPWM.c: 75: PSA = 1;
 "75
 [e = _PSA -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 76: GIE = 1;
-"76
-[e = _GIE -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 77: }
+[; ;BluetoothReceiveServoPWM.c: 77: RCIE = 1;
 "77
-[e :UE 286 ]
-}
+[e = _RCIE -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 78: GIE = 1;
 "78
+[e = _GIE -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 79: }
+"79
+[e :UE 289 ]
+}
+"80
 [v _pulseDelay `(v ~T0 @X0 1 ef1`ui ]
 {
-[; ;BluetoothReceiveServoPWM.c: 78: void pulseDelay(unsigned int delaySteps){
+[; ;BluetoothReceiveServoPWM.c: 80: void pulseDelay(unsigned int delaySteps){
 [e :U _pulseDelay ]
 [v _delaySteps `ui ~T0 @X0 1 r1 ]
 [f ]
-[; ;BluetoothReceiveServoPWM.c: 79: TMR0ON = 1;
-"79
-[e = _TMR0ON -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 80: delaySteps = (unsigned int)(65535 - delaySteps);
-"80
-[e = _delaySteps -> - -> 65535 `l -> _delaySteps `l `ui ]
-[; ;BluetoothReceiveServoPWM.c: 81: TMR0H = (delaySteps & 0b1111111100000000)>>8;
+[; ;BluetoothReceiveServoPWM.c: 81: TMR0ON = 1;
 "81
-[e = _TMR0H -> >> & _delaySteps -> 65280 `ui -> 8 `i `uc ]
-[; ;BluetoothReceiveServoPWM.c: 82: TMR0L = (delaySteps & 0b0000000011111111);
+[e = _TMR0ON -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 82: delaySteps = (unsigned int)(65535 - delaySteps);
 "82
-[e = _TMR0L -> & _delaySteps -> -> 255 `i `ui `uc ]
-[; ;BluetoothReceiveServoPWM.c: 83: while (TMR0IF == 0) {}
+[e = _delaySteps -> - -> 65535 `l -> _delaySteps `l `ui ]
+[; ;BluetoothReceiveServoPWM.c: 83: TMR0H = (delaySteps & 0b1111111100000000)>>8;
 "83
-[e $U 288  ]
-[e :U 289 ]
+[e = _TMR0H -> >> & _delaySteps -> 65280 `ui -> 8 `i `uc ]
+[; ;BluetoothReceiveServoPWM.c: 84: TMR0L = (delaySteps & 0b0000000011111111);
+"84
+[e = _TMR0L -> & _delaySteps -> -> 255 `i `ui `uc ]
+[; ;BluetoothReceiveServoPWM.c: 85: while (TMR0IF == 0) {}
+"85
+[e $U 291  ]
+[e :U 292 ]
 {
 }
-[e :U 288 ]
-[e $ == -> _TMR0IF `i -> 0 `i 289  ]
-[e :U 290 ]
-[; ;BluetoothReceiveServoPWM.c: 84: TMR0IF = 0;
-"84
-[e = _TMR0IF -> -> 0 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 85: TMR0ON = 0;
-"85
-[e = _TMR0ON -> -> 0 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 86: }
+[e :U 291 ]
+[e $ == -> _TMR0IF `i -> 0 `i 292  ]
+[e :U 293 ]
+[; ;BluetoothReceiveServoPWM.c: 86: TMR0IF = 0;
 "86
-[e :UE 287 ]
-}
+[e = _TMR0IF -> -> 0 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 87: TMR0ON = 0;
 "87
+[e = _TMR0ON -> -> 0 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 88: }
+"88
+[e :UE 290 ]
+}
+"89
 [v _servoRun `(v ~T0 @X0 1 ef1`*uc ]
 {
-[; ;BluetoothReceiveServoPWM.c: 87: void servoRun(char* Output){
+[; ;BluetoothReceiveServoPWM.c: 89: void servoRun(char* Output){
 [e :U _servoRun ]
 [v _Output `*uc ~T0 @X0 1 r1 ]
 [f ]
-"88
+"90
 [v _delayCycles `ui ~T0 @X0 1 a ]
-[; ;BluetoothReceiveServoPWM.c: 88: unsigned int delayCycles = 0, fianlDelayCycles = 0;
+[; ;BluetoothReceiveServoPWM.c: 90: unsigned int delayCycles = 0, fianlDelayCycles = 0;
 [e = _delayCycles -> -> 0 `i `ui ]
 [v _fianlDelayCycles `ui ~T0 @X0 1 a ]
 [e = _fianlDelayCycles -> -> 0 `i `ui ]
-"89
+"91
 [v _servoNumber `uc ~T0 @X0 1 a ]
-[; ;BluetoothReceiveServoPWM.c: 89: unsigned char servoNumber;
-[; ;BluetoothReceiveServoPWM.c: 90: for(servoNumber = 0; servoNumber < 6; servoNumber++){
-"90
+[; ;BluetoothReceiveServoPWM.c: 91: unsigned char servoNumber;
+[; ;BluetoothReceiveServoPWM.c: 92: for(servoNumber = 0; servoNumber < 6; servoNumber++){
+"92
 {
 [e = _servoNumber -> -> 0 `i `uc ]
-[e $ < -> _servoNumber `i -> 6 `i 292  ]
-[e $U 293  ]
-[e :U 292 ]
+[e $ < -> _servoNumber `i -> 6 `i 295  ]
+[e $U 296  ]
+[e :U 295 ]
 {
-[; ;BluetoothReceiveServoPWM.c: 91: delayCycles = (unsigned int)(((Output[servoNumber]/180.0)*3900)+1000);
-"91
-[e = _delayCycles -> + * / -> *U + _Output * -> _servoNumber `ux -> -> # *U _Output `ui `ux `d .180.0 -> -> 3900 `i `d -> -> 1000 `i `d `ui ]
-[; ;BluetoothReceiveServoPWM.c: 92: fianlDelayCycles += (delayCycles+(Output[servoNumber]*3));
-"92
-[e =+ _fianlDelayCycles + _delayCycles -> * -> *U + _Output * -> _servoNumber `ux -> -> # *U _Output `ui `ux `i -> 3 `i `ui ]
-[; ;BluetoothReceiveServoPWM.c: 93: PORTB = 1<<servoNumber;
+[; ;BluetoothReceiveServoPWM.c: 93: delayCycles = (unsigned int)(((Output[servoNumber]/180.0)*3900)+1000);
 "93
-[e = _PORTB -> << -> 1 `i _servoNumber `uc ]
-[; ;BluetoothReceiveServoPWM.c: 94: pulseDelay(delayCycles);
+[e = _delayCycles -> + * / -> *U + _Output * -> _servoNumber `ux -> -> # *U _Output `ui `ux `d .180.0 -> -> 3900 `i `d -> -> 1000 `i `d `ui ]
+[; ;BluetoothReceiveServoPWM.c: 94: fianlDelayCycles += (delayCycles+(Output[servoNumber]*3));
 "94
-[e ( _pulseDelay (1 _delayCycles ]
-[; ;BluetoothReceiveServoPWM.c: 95: PORTB = 0<<servoNumber;
+[e =+ _fianlDelayCycles + _delayCycles -> * -> *U + _Output * -> _servoNumber `ux -> -> # *U _Output `ui `ux `i -> 3 `i `ui ]
+[; ;BluetoothReceiveServoPWM.c: 95: PORTB = 1<<servoNumber;
 "95
-[e = _PORTB -> << -> 0 `i _servoNumber `uc ]
+[e = _PORTB -> << -> 1 `i _servoNumber `uc ]
+[; ;BluetoothReceiveServoPWM.c: 96: pulseDelay(delayCycles);
 "96
-}
-"90
-[e ++ _servoNumber -> -> 1 `i `uc ]
-[e $ < -> _servoNumber `i -> 6 `i 292  ]
-[e :U 293 ]
-"96
-}
-[; ;BluetoothReceiveServoPWM.c: 96: }
-[; ;BluetoothReceiveServoPWM.c: 97: fianlDelayCycles = (unsigned int)((40000-14500) - fianlDelayCycles);
+[e ( _pulseDelay (1 _delayCycles ]
+[; ;BluetoothReceiveServoPWM.c: 97: PORTB = 0<<servoNumber;
 "97
-[e = _fianlDelayCycles -> - - -> 40000 `l -> -> 14500 `i `l -> _fianlDelayCycles `l `ui ]
-[; ;BluetoothReceiveServoPWM.c: 98: pulseDelay(fianlDelayCycles);
+[e = _PORTB -> << -> 0 `i _servoNumber `uc ]
 "98
-[e ( _pulseDelay (1 _fianlDelayCycles ]
-[; ;BluetoothReceiveServoPWM.c: 99: }
+}
+"92
+[e ++ _servoNumber -> -> 1 `i `uc ]
+[e $ < -> _servoNumber `i -> 6 `i 295  ]
+[e :U 296 ]
+"98
+}
+[; ;BluetoothReceiveServoPWM.c: 98: }
+[; ;BluetoothReceiveServoPWM.c: 99: fianlDelayCycles = (unsigned int)((40000-14500) - fianlDelayCycles);
 "99
-[e :UE 291 ]
+[e = _fianlDelayCycles -> - - -> 40000 `l -> -> 14500 `i `l -> _fianlDelayCycles `l `ui ]
+[; ;BluetoothReceiveServoPWM.c: 100: pulseDelay(fianlDelayCycles);
+"100
+[e ( _pulseDelay (1 _fianlDelayCycles ]
+[; ;BluetoothReceiveServoPWM.c: 101: }
+"101
+[e :UE 294 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"100
+"102
 [v _main `(v ~T0 @X0 1 ef ]
-"101
 {
-[; ;BluetoothReceiveServoPWM.c: 100: void main()
-[; ;BluetoothReceiveServoPWM.c: 101: {
+[; ;BluetoothReceiveServoPWM.c: 102: void main(){
 [e :U _main ]
 [f ]
-[; ;BluetoothReceiveServoPWM.c: 102: initialise();
-"102
+[; ;BluetoothReceiveServoPWM.c: 103: initialise();
+"103
 [e ( _initialise ..  ]
 [v F2438 `uc ~T0 @X0 -> 6 `i s ]
 [i F2438
 :U ..
-"112
+"113
 -> -> 90 `i `uc
 -> -> 90 `i `uc
 -> -> 0 `i `uc
@@ -3212,34 +3222,34 @@ Version 3.2 HI-TECH Software Intermediate Code
 ..
 ]
 [v _Output `uc ~T0 @X0 -> 6 `i a ]
-[; ;BluetoothReceiveServoPWM.c: 112: unsigned char Output[6] = {90,90,0,90,90,10};
+[; ;BluetoothReceiveServoPWM.c: 113: unsigned char Output[6] = {90,90,0,90,90,10};
 [e = _Output F2438 ]
-[; ;BluetoothReceiveServoPWM.c: 113: while(1){
-"113
-[e :U 297 ]
-{
-[; ;BluetoothReceiveServoPWM.c: 114: servoRun(Output);
+[; ;BluetoothReceiveServoPWM.c: 114: while(1){
 "114
-[e ( _servoRun (1 &U _Output ]
-[; ;BluetoothReceiveServoPWM.c: 115: if (RCIF == 1){
-"115
-[e $ ! == -> _RCIF `i -> 1 `i 299  ]
+[e :U 300 ]
 {
-[; ;BluetoothReceiveServoPWM.c: 116: UARTReadString(Output, 6);
+[; ;BluetoothReceiveServoPWM.c: 115: servoRun(Output);
+"115
+[e ( _servoRun (1 &U _Output ]
+[; ;BluetoothReceiveServoPWM.c: 116: if (RCIF == 1){
 "116
-[e ( _UARTReadString (2 , &U _Output -> -> 6 `i `uc ]
+[e $ ! == -> _RCIF `i -> 1 `i 302  ]
+{
+[; ;BluetoothReceiveServoPWM.c: 117: UARTReadString(Output, 6);
 "117
-}
-[e :U 299 ]
+[e ( _UARTReadString (2 , &U _Output -> -> 6 `i `uc ]
 "118
 }
-[e :U 296 ]
-"113
-[e $U 297  ]
-[e :U 298 ]
-[; ;BluetoothReceiveServoPWM.c: 117: }
+[e :U 302 ]
+"119
+}
+[e :U 299 ]
+"114
+[e $U 300  ]
+[e :U 301 ]
 [; ;BluetoothReceiveServoPWM.c: 118: }
 [; ;BluetoothReceiveServoPWM.c: 119: }
-"119
-[e :UE 295 ]
+[; ;BluetoothReceiveServoPWM.c: 120: }
+"120
+[e :UE 298 ]
 }

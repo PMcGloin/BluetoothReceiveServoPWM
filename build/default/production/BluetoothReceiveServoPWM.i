@@ -4421,7 +4421,7 @@ return 1;
 return 0;
 }
 char UARTReadChar(){
-
+while(!RCIF);
 if (OERR == 1){
 CREN = 0;
 CREN = 1;
@@ -4619,6 +4619,8 @@ UARTInitialise(9600);
 T08BIT = 0;
 T0CS = 0;
 PSA = 1;
+
+RCIE = 1;
 GIE = 1;
 }
 void pulseDelay(unsigned int delaySteps){
@@ -4643,11 +4645,10 @@ PORTB = 0<<servoNumber;
 fianlDelayCycles = (unsigned int)((40000-14500) - fianlDelayCycles);
 pulseDelay(fianlDelayCycles);
 }
-void main()
-{
+void main(){
 initialise();
 
-# 112
+# 113
 unsigned char Output[6] = {90,90,0,90,90,10};
 while(1){
 servoRun(Output);
