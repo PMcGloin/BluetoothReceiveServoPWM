@@ -1,4 +1,4 @@
-#define _XTAL_FREQ 8000000    //18f4520
+#define _XTAL_FREQ 8000000
 #include <pic18f4520.h>
 #include "uart.h"
 #include <stdint.h>         /* For uint8_t definition */
@@ -62,6 +62,16 @@
  * 2^16-4000 = 61536 steps = 2ms, 180deg
  * 2^16-1000 = 64536 steps = 0.5ms, 0deg
 */
+/*******************************************************************************
+* Function Name: initialise
+*
+* Input Parameters: void
+*
+* Returns: void
+*
+* Purpose of function: 	initialises PIC to 8MHz, 9600 Baud Rate and sets up
+*                       timer
+*******************************************************************************/
 void initialise(void){
     /*clock speed setup*/
     IRCF2 = 1;
@@ -89,6 +99,15 @@ void initialise(void){
     RCIE = 1;               // EUSART receive interrupt enable
     GIE = 1;                // enable global interrupts
 }
+/*******************************************************************************
+* Function Name: pulseDelay
+*
+* Input Parameters: number of machine cycles for delay
+*
+* Returns: void
+*
+* Purpose of function: 	timer using number of steps
+*******************************************************************************/
 void pulseDelay(unsigned int delaySteps){
     TMR0ON = 1;             //start timer0
     delaySteps = (unsigned int)(65535 - delaySteps);
@@ -98,6 +117,15 @@ void pulseDelay(unsigned int delaySteps){
     TMR0IF = 0;             // clear the overflow flag
     TMR0ON = 0;             //stop timer0
 }
+/*******************************************************************************
+* Function Name: servoRun
+*
+* Input Parameters: pointer to Output array
+*
+* Returns: void
+*
+* Purpose of function: 	generates PWM for 6 servos simultaniously
+*******************************************************************************/
 void servoRun(char* Output){
     unsigned int delayCycles = 0, fianlDelayCycles = 0;
     unsigned char servoNumber; //0-5
@@ -112,7 +140,7 @@ void servoRun(char* Output){
     pulseDelay(fianlDelayCycles);
 }
 void main(){
-    initialise();
+    initialise();                       //call initialise
     /*
     Step Delay: a milliseconds delay between the movement of each servo.  Allowed values from 10 to 30 msec.
     M1=base degrees. Allowed values from 0 to 180 degrees
@@ -124,9 +152,9 @@ void main(){
     */
     unsigned char Output[6] = {90,90,0,90,90,10}; //start position
     while(1){
-        servoRun(Output);
-        if (RCIF == 1){ //receive interrupt flag
-            UARTReadString(Output, 6);    //uart.h
+        servoRun(Output);               //call servoRun
+        if (RCIF == 1){                 //receive interrupt flag
+            UARTReadString(Output, 6);  //uart.h
         }
     }
 }

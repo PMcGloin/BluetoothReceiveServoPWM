@@ -1,24 +1,10 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"7141 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f4520.h
-[v _BRGH `Vb ~T0 @X0 0 e@32098 ]
-"3600
-[v _SPBRG `Vuc ~T0 @X0 0 e@4015 ]
-"8389
-[v _SYNC `Vb ~T0 @X0 0 e@32100 ]
-"8326
-[v _SPEN `Vb ~T0 @X0 0 e@32095 ]
-"8632
-[v _TRISC7 `Vb ~T0 @X0 0 e@31911 ]
-"8629
-[v _TRISC6 `Vb ~T0 @X0 0 e@31910 ]
-"7291
-[v _CREN `Vb ~T0 @X0 0 e@32092 ]
-"8722
-[v _TXEN `Vb ~T0 @X0 0 e@32101 ]
-"8176
+"8176 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f4520.h
 [v _RCIF `Vb ~T0 @X0 0 e@31989 ]
 "7888
 [v _OERR `Vb ~T0 @X0 0 e@32089 ]
+"7291
+[v _CREN `Vb ~T0 @X0 0 e@32092 ]
 "3588
 [v _RCREG `Vuc ~T0 @X0 0 e@4014 ]
 "7555
@@ -29,6 +15,22 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _IRCF0 `Vb ~T0 @X0 0 e@32412 ]
 "1699
 [v _TRISB `Vuc ~T0 @X0 0 e@3987 ]
+"8389
+[v _SYNC `Vb ~T0 @X0 0 e@32100 ]
+"7141
+[v _BRGH `Vb ~T0 @X0 0 e@32098 ]
+"8326
+[v _SPEN `Vb ~T0 @X0 0 e@32095 ]
+"8632
+[v _TRISC7 `Vb ~T0 @X0 0 e@31911 ]
+"8629
+[v _TRISC6 `Vb ~T0 @X0 0 e@31910 ]
+"7138
+[v _BRG16 `Vb ~T0 @X0 0 e@32195 ]
+"8797
+[v _WUE `Vb ~T0 @X0 0 e@32193 ]
+"3600
+[v _SPBRG `Vuc ~T0 @X0 0 e@4015 ]
 "8398
 [v _T08BIT `Vb ~T0 @X0 0 e@32430 ]
 "8404
@@ -2817,142 +2819,74 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic18f4520.h: 8851: extern volatile __bit nWR __at(0x7C21);
 [; ;pic18f4520.h: 8854: extern volatile __bit nWRITE __at(0x7E3A);
 "1 uart.h
-[v _UARTInitialise `(uc ~T0 @X0 1 ef1`Cl ]
-{
-[; ;uart.h: 1: char UARTInitialise(const long int baudrate){
-[e :U _UARTInitialise ]
-[v _baudrate `Cl ~T0 @X0 1 r1 ]
-[f ]
-"2
-[v _x `ui ~T0 @X0 1 a ]
-[; ;uart.h: 2: unsigned int x;
-[; ;uart.h: 3: x = (8000000 - baudrate*64)/(baudrate*64);
-"3
-[e = _x -> / - -> 8000000 `l * _baudrate -> -> 64 `i `l * _baudrate -> -> 64 `i `l `ui ]
-[; ;uart.h: 4: if(x>255){
-"4
-[e $ ! > _x -> -> 255 `i `ui 277  ]
-{
-[; ;uart.h: 5: x = (8000000 - baudrate*16)/(baudrate*16);
-"5
-[e = _x -> / - -> 8000000 `l * _baudrate -> -> 16 `i `l * _baudrate -> -> 16 `i `l `ui ]
-[; ;uart.h: 6: BRGH = 1;
-"6
-[e = _BRGH -> -> 1 `i `b ]
-"7
-}
-[e :U 277 ]
-[; ;uart.h: 7: }
-[; ;uart.h: 8: if(x<256){
-"8
-[e $ ! < _x -> -> 256 `i `ui 278  ]
-{
-[; ;uart.h: 9: SPBRG = x;
-"9
-[e = _SPBRG -> _x `uc ]
-[; ;uart.h: 10: SYNC = 0;
-"10
-[e = _SYNC -> -> 0 `i `b ]
-[; ;uart.h: 11: SPEN = 1;
-"11
-[e = _SPEN -> -> 1 `i `b ]
-[; ;uart.h: 12: TRISC7 = 1;
-"12
-[e = _TRISC7 -> -> 1 `i `b ]
-[; ;uart.h: 13: TRISC6 = 1;
-"13
-[e = _TRISC6 -> -> 1 `i `b ]
-[; ;uart.h: 14: CREN = 1;
-"14
-[e = _CREN -> -> 1 `i `b ]
-[; ;uart.h: 15: TXEN = 1;
-"15
-[e = _TXEN -> -> 1 `i `b ]
-[; ;uart.h: 16: return 1;
-"16
-[e ) -> -> 1 `i `uc ]
-[e $UE 276  ]
-"17
-}
-[e :U 278 ]
-[; ;uart.h: 17: }
-[; ;uart.h: 18: return 0;
-"18
-[e ) -> -> 0 `i `uc ]
-[e $UE 276  ]
-[; ;uart.h: 19: }
-"19
-[e :UE 276 ]
-}
-"20
 [v _UARTReadChar `(uc ~T0 @X0 1 ef ]
 {
-[; ;uart.h: 20: char UARTReadChar(){
+[; ;uart.h: 1: char UARTReadChar(){
 [e :U _UARTReadChar ]
 [f ]
-[; ;uart.h: 21: while(!RCIF);
-"21
-[e $U 280  ]
-[e :U 281 ]
-[e :U 280 ]
-[e $ ! _RCIF 281  ]
-[e :U 282 ]
-[; ;uart.h: 22: if (OERR == 1){
-"22
-[e $ ! == -> _OERR `i -> 1 `i 283  ]
+[; ;uart.h: 2: while(!RCIF);
+"2
+[e $U 277  ]
+[e :U 278 ]
+[e :U 277 ]
+[e $ ! _RCIF 278  ]
+[e :U 279 ]
+[; ;uart.h: 3: if (OERR == 1){
+"3
+[e $ ! == -> _OERR `i -> 1 `i 280  ]
 {
-[; ;uart.h: 23: CREN = 0;
-"23
+[; ;uart.h: 4: CREN = 0;
+"4
 [e = _CREN -> -> 0 `i `b ]
-[; ;uart.h: 24: CREN = 1;
-"24
+[; ;uart.h: 5: CREN = 1;
+"5
 [e = _CREN -> -> 1 `i `b ]
-"25
+"6
 }
-[e :U 283 ]
-[; ;uart.h: 25: }
-[; ;uart.h: 26: return RCREG;
-"26
+[e :U 280 ]
+[; ;uart.h: 6: }
+[; ;uart.h: 7: return RCREG;
+"7
 [e ) _RCREG ]
-[e $UE 279  ]
-[; ;uart.h: 27: }
-"27
-[e :UE 279 ]
+[e $UE 276  ]
+[; ;uart.h: 8: }
+"8
+[e :UE 276 ]
 }
-"28
+"9
 [v _UARTReadString `(v ~T0 @X0 1 ef2`*uc`uc ]
 {
-[; ;uart.h: 28: void UARTReadString(char Output[], unsigned char length){
+[; ;uart.h: 9: void UARTReadString(char Output[], unsigned char length){
 [e :U _UARTReadString ]
 [v _Output `*uc ~T0 @X0 1 r1 ]
 [v _length `uc ~T0 @X0 1 r2 ]
 [f ]
-"29
+"10
 [v _i `uc ~T0 @X0 1 a ]
-[; ;uart.h: 29: unsigned char i;
-[; ;uart.h: 30: for(i=0;i<length;i++){
-"30
+[; ;uart.h: 10: unsigned char i;
+[; ;uart.h: 11: for(i=0;i<length;i++){
+"11
 {
 [e = _i -> -> 0 `i `uc ]
-[e $U 288  ]
-[e :U 285 ]
+[e $U 285  ]
+[e :U 282 ]
 {
-[; ;uart.h: 31: Output[i] = UARTReadChar();
-"31
+[; ;uart.h: 12: Output[i] = UARTReadChar();
+"12
 [e = *U + _Output * -> _i `ux -> -> # *U _Output `ui `ux ( _UARTReadChar ..  ]
-"32
+"13
 }
-"30
+"11
 [e ++ _i -> -> 1 `i `uc ]
-[e :U 288 ]
-[e $ < -> _i `i -> _length `i 285  ]
-[e :U 286 ]
-"32
+[e :U 285 ]
+[e $ < -> _i `i -> _length `i 282  ]
+[e :U 283 ]
+"13
 }
-[; ;uart.h: 32: }
-[; ;uart.h: 33: }
-"33
-[e :UE 284 ]
+[; ;uart.h: 13: }
+[; ;uart.h: 14: }
+"14
+[e :UE 281 ]
 }
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
@@ -3081,138 +3015,162 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;BluetoothReceiveServoPWM.c: 70: TRISB = 0x00;
 "70
 [e = _TRISB -> -> 0 `i `uc ]
-[; ;BluetoothReceiveServoPWM.c: 71: UARTInitialise(9600);
-"71
-[e ( _UARTInitialise (1 -> -> 9600 `i `l ]
-[; ;BluetoothReceiveServoPWM.c: 73: T08BIT = 0;
+[; ;BluetoothReceiveServoPWM.c: 73: SYNC = 0;
 "73
-[e = _T08BIT -> -> 0 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 74: T0CS = 0;
+[e = _SYNC -> -> 0 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 74: BRGH = 1;
 "74
-[e = _T0CS -> -> 0 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 75: PSA = 1;
-"75
-[e = _PSA -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 77: RCIE = 1;
+[e = _BRGH -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 76: SPEN = 1;
+"76
+[e = _SPEN -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 77: CREN = 1;
 "77
-[e = _RCIE -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 78: GIE = 1;
-"78
-[e = _GIE -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 79: }
+[e = _CREN -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 79: TRISC7 = 1;
 "79
-[e :UE 289 ]
-}
+[e = _TRISC7 -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 80: TRISC6 = 1;
 "80
+[e = _TRISC6 -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 81: BRG16 = 0;
+"81
+[e = _BRG16 -> -> 0 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 82: WUE = 1;
+"82
+[e = _WUE -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 83: SPBRG = 51;
+"83
+[e = _SPBRG -> -> 51 `i `uc ]
+[; ;BluetoothReceiveServoPWM.c: 85: T08BIT = 0;
+"85
+[e = _T08BIT -> -> 0 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 86: T0CS = 0;
+"86
+[e = _T0CS -> -> 0 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 87: PSA = 1;
+"87
+[e = _PSA -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 89: RCIE = 1;
+"89
+[e = _RCIE -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 90: GIE = 1;
+"90
+[e = _GIE -> -> 1 `i `b ]
+[; ;BluetoothReceiveServoPWM.c: 91: }
+"91
+[e :UE 286 ]
+}
+"92
 [v _pulseDelay `(v ~T0 @X0 1 ef1`ui ]
 {
-[; ;BluetoothReceiveServoPWM.c: 80: void pulseDelay(unsigned int delaySteps){
+[; ;BluetoothReceiveServoPWM.c: 92: void pulseDelay(unsigned int delaySteps){
 [e :U _pulseDelay ]
 [v _delaySteps `ui ~T0 @X0 1 r1 ]
 [f ]
-[; ;BluetoothReceiveServoPWM.c: 81: TMR0ON = 1;
-"81
+[; ;BluetoothReceiveServoPWM.c: 93: TMR0ON = 1;
+"93
 [e = _TMR0ON -> -> 1 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 82: delaySteps = (unsigned int)(65535 - delaySteps);
-"82
+[; ;BluetoothReceiveServoPWM.c: 94: delaySteps = (unsigned int)(65535 - delaySteps);
+"94
 [e = _delaySteps -> - -> 65535 `l -> _delaySteps `l `ui ]
-[; ;BluetoothReceiveServoPWM.c: 83: TMR0H = (delaySteps & 0b1111111100000000)>>8;
-"83
+[; ;BluetoothReceiveServoPWM.c: 95: TMR0H = (delaySteps & 0b1111111100000000)>>8;
+"95
 [e = _TMR0H -> >> & _delaySteps -> 65280 `ui -> 8 `i `uc ]
-[; ;BluetoothReceiveServoPWM.c: 84: TMR0L = (delaySteps & 0b0000000011111111);
-"84
+[; ;BluetoothReceiveServoPWM.c: 96: TMR0L = (delaySteps & 0b0000000011111111);
+"96
 [e = _TMR0L -> & _delaySteps -> -> 255 `i `ui `uc ]
-[; ;BluetoothReceiveServoPWM.c: 85: while (TMR0IF == 0) {}
-"85
-[e $U 291  ]
-[e :U 292 ]
+[; ;BluetoothReceiveServoPWM.c: 97: while (TMR0IF == 0) {}
+"97
+[e $U 288  ]
+[e :U 289 ]
 {
 }
-[e :U 291 ]
-[e $ == -> _TMR0IF `i -> 0 `i 292  ]
-[e :U 293 ]
-[; ;BluetoothReceiveServoPWM.c: 86: TMR0IF = 0;
-"86
+[e :U 288 ]
+[e $ == -> _TMR0IF `i -> 0 `i 289  ]
+[e :U 290 ]
+[; ;BluetoothReceiveServoPWM.c: 98: TMR0IF = 0;
+"98
 [e = _TMR0IF -> -> 0 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 87: TMR0ON = 0;
-"87
+[; ;BluetoothReceiveServoPWM.c: 99: TMR0ON = 0;
+"99
 [e = _TMR0ON -> -> 0 `i `b ]
-[; ;BluetoothReceiveServoPWM.c: 88: }
-"88
-[e :UE 290 ]
+[; ;BluetoothReceiveServoPWM.c: 100: }
+"100
+[e :UE 287 ]
 }
-"89
+"101
 [v _servoRun `(v ~T0 @X0 1 ef1`*uc ]
 {
-[; ;BluetoothReceiveServoPWM.c: 89: void servoRun(char* Output){
+[; ;BluetoothReceiveServoPWM.c: 101: void servoRun(char* Output){
 [e :U _servoRun ]
 [v _Output `*uc ~T0 @X0 1 r1 ]
 [f ]
-"90
+"102
 [v _delayCycles `ui ~T0 @X0 1 a ]
-[; ;BluetoothReceiveServoPWM.c: 90: unsigned int delayCycles = 0, fianlDelayCycles = 0;
+[; ;BluetoothReceiveServoPWM.c: 102: unsigned int delayCycles = 0, fianlDelayCycles = 0;
 [e = _delayCycles -> -> 0 `i `ui ]
 [v _fianlDelayCycles `ui ~T0 @X0 1 a ]
 [e = _fianlDelayCycles -> -> 0 `i `ui ]
-"91
+"103
 [v _servoNumber `uc ~T0 @X0 1 a ]
-[; ;BluetoothReceiveServoPWM.c: 91: unsigned char servoNumber;
-[; ;BluetoothReceiveServoPWM.c: 92: for(servoNumber = 0; servoNumber < 6; servoNumber++){
-"92
+[; ;BluetoothReceiveServoPWM.c: 103: unsigned char servoNumber;
+[; ;BluetoothReceiveServoPWM.c: 104: for(servoNumber = 0; servoNumber < 6; servoNumber++){
+"104
 {
 [e = _servoNumber -> -> 0 `i `uc ]
-[e $ < -> _servoNumber `i -> 6 `i 295  ]
-[e $U 296  ]
-[e :U 295 ]
+[e $ < -> _servoNumber `i -> 6 `i 292  ]
+[e $U 293  ]
+[e :U 292 ]
 {
-[; ;BluetoothReceiveServoPWM.c: 93: delayCycles = (unsigned int)(((Output[servoNumber]/180.0)*3900)+1000);
-"93
+[; ;BluetoothReceiveServoPWM.c: 105: delayCycles = (unsigned int)(((Output[servoNumber]/180.0)*3900)+1000);
+"105
 [e = _delayCycles -> + * / -> *U + _Output * -> _servoNumber `ux -> -> # *U _Output `ui `ux `d .180.0 -> -> 3900 `i `d -> -> 1000 `i `d `ui ]
-[; ;BluetoothReceiveServoPWM.c: 94: fianlDelayCycles += (delayCycles+(Output[servoNumber]*3));
-"94
+[; ;BluetoothReceiveServoPWM.c: 106: fianlDelayCycles += (delayCycles+(Output[servoNumber]*3));
+"106
 [e =+ _fianlDelayCycles + _delayCycles -> * -> *U + _Output * -> _servoNumber `ux -> -> # *U _Output `ui `ux `i -> 3 `i `ui ]
-[; ;BluetoothReceiveServoPWM.c: 95: PORTB = 1<<servoNumber;
-"95
+[; ;BluetoothReceiveServoPWM.c: 107: PORTB = 1<<servoNumber;
+"107
 [e = _PORTB -> << -> 1 `i _servoNumber `uc ]
-[; ;BluetoothReceiveServoPWM.c: 96: pulseDelay(delayCycles);
-"96
+[; ;BluetoothReceiveServoPWM.c: 108: pulseDelay(delayCycles);
+"108
 [e ( _pulseDelay (1 _delayCycles ]
-[; ;BluetoothReceiveServoPWM.c: 97: PORTB = 0<<servoNumber;
-"97
+[; ;BluetoothReceiveServoPWM.c: 109: PORTB = 0<<servoNumber;
+"109
 [e = _PORTB -> << -> 0 `i _servoNumber `uc ]
-"98
+"110
 }
-"92
+"104
 [e ++ _servoNumber -> -> 1 `i `uc ]
-[e $ < -> _servoNumber `i -> 6 `i 295  ]
-[e :U 296 ]
-"98
+[e $ < -> _servoNumber `i -> 6 `i 292  ]
+[e :U 293 ]
+"110
 }
-[; ;BluetoothReceiveServoPWM.c: 98: }
-[; ;BluetoothReceiveServoPWM.c: 99: fianlDelayCycles = (unsigned int)((40000-14500) - fianlDelayCycles);
-"99
+[; ;BluetoothReceiveServoPWM.c: 110: }
+[; ;BluetoothReceiveServoPWM.c: 111: fianlDelayCycles = (unsigned int)((40000-14500) - fianlDelayCycles);
+"111
 [e = _fianlDelayCycles -> - - -> 40000 `l -> -> 14500 `i `l -> _fianlDelayCycles `l `ui ]
-[; ;BluetoothReceiveServoPWM.c: 100: pulseDelay(fianlDelayCycles);
-"100
+[; ;BluetoothReceiveServoPWM.c: 112: pulseDelay(fianlDelayCycles);
+"112
 [e ( _pulseDelay (1 _fianlDelayCycles ]
-[; ;BluetoothReceiveServoPWM.c: 101: }
-"101
-[e :UE 294 ]
+[; ;BluetoothReceiveServoPWM.c: 113: }
+"113
+[e :UE 291 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"102
+"114
 [v _main `(v ~T0 @X0 1 ef ]
 {
-[; ;BluetoothReceiveServoPWM.c: 102: void main(){
+[; ;BluetoothReceiveServoPWM.c: 114: void main(){
 [e :U _main ]
 [f ]
-[; ;BluetoothReceiveServoPWM.c: 103: initialise();
-"103
+[; ;BluetoothReceiveServoPWM.c: 115: initialise();
+"115
 [e ( _initialise ..  ]
-[v F2438 `uc ~T0 @X0 -> 6 `i s ]
-[i F2438
+[v F2435 `uc ~T0 @X0 -> 6 `i s ]
+[i F2435
 :U ..
-"113
+"125
 -> -> 90 `i `uc
 -> -> 90 `i `uc
 -> -> 0 `i `uc
@@ -3222,34 +3180,34 @@ Version 3.2 HI-TECH Software Intermediate Code
 ..
 ]
 [v _Output `uc ~T0 @X0 -> 6 `i a ]
-[; ;BluetoothReceiveServoPWM.c: 113: unsigned char Output[6] = {90,90,0,90,90,10};
-[e = _Output F2438 ]
-[; ;BluetoothReceiveServoPWM.c: 114: while(1){
-"114
-[e :U 300 ]
+[; ;BluetoothReceiveServoPWM.c: 125: unsigned char Output[6] = {90,90,0,90,90,10};
+[e = _Output F2435 ]
+[; ;BluetoothReceiveServoPWM.c: 126: while(1){
+"126
+[e :U 297 ]
 {
-[; ;BluetoothReceiveServoPWM.c: 115: servoRun(Output);
-"115
+[; ;BluetoothReceiveServoPWM.c: 127: servoRun(Output);
+"127
 [e ( _servoRun (1 &U _Output ]
-[; ;BluetoothReceiveServoPWM.c: 116: if (RCIF == 1){
-"116
-[e $ ! == -> _RCIF `i -> 1 `i 302  ]
+[; ;BluetoothReceiveServoPWM.c: 128: if (RCIF == 1){
+"128
+[e $ ! == -> _RCIF `i -> 1 `i 299  ]
 {
-[; ;BluetoothReceiveServoPWM.c: 117: UARTReadString(Output, 6);
-"117
+[; ;BluetoothReceiveServoPWM.c: 129: UARTReadString(Output, 6);
+"129
 [e ( _UARTReadString (2 , &U _Output -> -> 6 `i `uc ]
-"118
-}
-[e :U 302 ]
-"119
+"130
 }
 [e :U 299 ]
-"114
-[e $U 300  ]
-[e :U 301 ]
-[; ;BluetoothReceiveServoPWM.c: 118: }
-[; ;BluetoothReceiveServoPWM.c: 119: }
-[; ;BluetoothReceiveServoPWM.c: 120: }
-"120
-[e :UE 298 ]
+"131
+}
+[e :U 296 ]
+"126
+[e $U 297  ]
+[e :U 298 ]
+[; ;BluetoothReceiveServoPWM.c: 130: }
+[; ;BluetoothReceiveServoPWM.c: 131: }
+[; ;BluetoothReceiveServoPWM.c: 132: }
+"132
+[e :UE 295 ]
 }

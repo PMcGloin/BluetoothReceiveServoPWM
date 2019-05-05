@@ -4401,25 +4401,6 @@ extern volatile __bit nWR __at(0x7C21);
 extern volatile __bit nWRITE __at(0x7E3A);
 
 # 1 "uart.h"
-char UARTInitialise(const long int baudrate){
-unsigned int x;
-x = (8000000 - baudrate*64)/(baudrate*64);
-if(x>255){
-x = (8000000 - baudrate*16)/(baudrate*16);
-BRGH = 1;
-}
-if(x<256){
-SPBRG = x;
-SYNC = 0;
-SPEN = 1;
-TRISC7 = 1;
-TRISC6 = 1;
-CREN = 1;
-TXEN = 1;
-return 1;
-}
-return 0;
-}
 char UARTReadChar(){
 while(!RCIF);
 if (OERR == 1){
@@ -4614,7 +4595,19 @@ IRCF2 = 1;
 IRCF1 = 1;
 IRCF0 = 1;
 TRISB = 0x00;
-UARTInitialise(9600);
+
+
+SYNC = 0;
+BRGH = 1;
+
+SPEN = 1;
+CREN = 1;
+
+TRISC7 = 1;
+TRISC6 = 1;
+BRG16 = 0;
+WUE = 1;
+SPBRG = 51;
 
 T08BIT = 0;
 T0CS = 0;
@@ -4648,7 +4641,7 @@ pulseDelay(fianlDelayCycles);
 void main(){
 initialise();
 
-# 113
+# 125
 unsigned char Output[6] = {90,90,0,90,90,10};
 while(1){
 servoRun(Output);
